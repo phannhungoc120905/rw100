@@ -1,3 +1,3 @@
 public enum PositionName {
-    DEV, TEST, SCRUM, MASTER, PM
+    DEV, TEST, SCRUM_MASTER, PM
 }
