@@ -26,7 +26,7 @@ public class Program {
 
         Position position3 = new Position();
         position3.positionId = 3;
-        position3.postion = PositionName.MASTER;
+        position3.postion = PositionName.SCRUM_MASTER;
 
         // 3 đối tượng cho Account
         Account account1 = new Account();
