@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -163,6 +164,7 @@ public class Main {
         exam1.category = cq1;
         exam1.duration = 30;
         exam1.creator = account1;
+        exam1.createDate = LocalDateTime.now();
 
         Exam exam2 = new Exam();
         exam2.examId = 2;

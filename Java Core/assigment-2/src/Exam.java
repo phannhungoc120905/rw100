@@ -1,4 +1,6 @@
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class Exam {
     int examId;
     String code;
@@ -6,5 +8,5 @@ public class Exam {
     CategoryQuestion category;
     int duration;
     Account creator;
-    LocalDate createDate;
+    LocalDateTime createDate;
 }
