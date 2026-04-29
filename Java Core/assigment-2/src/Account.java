@@ -7,4 +7,5 @@ import java.time.LocalDate;
         Department department;
         Position position;
         LocalDate createDate;
+        Group[] groups;
 }

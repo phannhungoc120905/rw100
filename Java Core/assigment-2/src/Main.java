@@ -215,5 +215,9 @@ public class Main {
         ex3.question3(exam1);
         ex3.question4(exam1);
         ex3.question5(exam1);
+
+        Group[] groups = {group1, group2, group3};
+        Exercise5.question9(accounts, groups);
     }
+
 }

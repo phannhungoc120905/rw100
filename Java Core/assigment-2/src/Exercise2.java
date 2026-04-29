@@ -45,7 +45,7 @@ public class Exercise2 {
     //In ra thông tin account (như Question 8 phần FOREACH) theo định dạng table (giống trong Database)
     public void question6(Account[] accounts) {
 
-        System.out.printf("%-20s %-20s %-20s\n", "Email", "Full Name", "Department");
+        System.out.printf("%-20s|%-20s|%-20s|\n", "Email", "Full Name", "Department");
 
         for (Account acc : accounts) {
 
