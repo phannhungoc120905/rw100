@@ -15,12 +15,9 @@ public class Department {
         this.departmentName = nameDepartment;
     }
 
-    public int getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(int departmentId) {
+    public Department(int departmentId, String departmentName) {
         this.departmentId = departmentId;
+        this.departmentName = departmentName;
     }
 
     public String getDepartmentName() {
@@ -29,5 +26,17 @@ public class Department {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + departmentId +
+                ", name='" + departmentName + '\'' +
+                '}';
     }
 }

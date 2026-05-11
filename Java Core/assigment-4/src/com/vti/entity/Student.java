@@ -6,10 +6,37 @@ public class Student {
     private String hometown;
     private float score;
 
+    public Student(){
+
+    }
     public Student(String name, String hometown) {
         this.name = name;
         this.hometown = hometown;
         this.score = 0;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getHometown() {
+        return hometown;
+    }
+
+    public void setHometown(String hometown) {
+        this.hometown = hometown;
+    }
+
+    public float getScore() {
+        return score;
     }
 
     public void setScore(float score) {
@@ -17,6 +44,7 @@ public class Student {
     }
 
     public void addScore(float add) {
+
         this.score += add;
     }
 
