@@ -5,6 +5,7 @@ import com.vti.entity.Position;
 import com.vti.enums.PositionName;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class PositionFunction {
@@ -56,63 +57,144 @@ public class PositionFunction {
         System.out.println("+-----+--------------------+");
     }
     public void insertPosition()  {
-        System.out.println("Nhập tên chức vụ (DEV, TEST, PM...): ");
-        String name = scanner.nextLine();
+        PositionName positionName;
+        while(true) {
+            System.out.println("Chọn Position:");
+            System.out.println("1. DEV");
+            System.out.println("2. TEST");
+            System.out.println("3. SCRUM_MASTER");
+            System.out.println("4. PM");
 
-        try {
-            PositionName positionName = PositionName.valueOf(name.toUpperCase());
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-            Position pos = new Position();
-            pos.setName(positionName);
+            positionName = this.convertToPositionName(choice);
 
-            boolean check = positionController.create(pos);
-
-            if (check) {
-                System.out.println("Thêm thành công!");
-            } else {
-                System.out.println("Thêm thất bại!");
+            //check null
+            if(Objects.isNull(positionName)){
+                System.out.println("Nhập sai, nhập lại!");
+                continue;
             }
 
-        } catch (Exception e) {
-            System.out.println("Tên chức vụ không hợp lệ!");
+            //check có trùng hay không
+            if(positionController.checkExistNameAndIdNot(positionName, null)){
+                System.out.println("Position đã tồn tại");
+                continue;
+            }
+            break;
+        }
+        boolean check =
+                positionController.createPosition(positionName);
+
+        if (check) {
+            System.out.println("Thêm mới thành công");
+        } else {
+            System.out.println("Thêm mới thất bại");
         }
     }
     public void deletePosition()  {
         System.out.print("Nhập ID cần xóa: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        int id;
+        while(true){
+            id = scanner.nextInt();
+            scanner.nextLine();
 
+            // check id > 0
+            if(id <= 0){
+                System.out.println("ID phải > 0, nhập lại");
+                continue;
+            }
+            //check tồn tại
+            if(!positionController.checkExistID(id)){
+                System.out.println("ID không tồn tại, nhập lại:");
+                continue;
+            }
+            break;
+        }
+        if (positionController.isPositionUsed(id)) {
+
+            System.out.println(
+                    "Position đang được sử dụng, không thể xóa!"
+            );
+
+            return;
+        }
         boolean check = positionController.delete(id);
 
         if (check) {
-            System.out.println("Xóa thành công!");
+            System.out.println("Xóa thành công");
         } else {
-            System.out.println("Xóa thất bại!");
+            System.out.println("Xóa thất bại");
         }
     }
-    public void updatePosition()  {
+    public void updatePosition() {
         System.out.print("Nhập ID cần sửa: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        Integer id;
+        while(true){
+            id = scanner.nextInt();
+            scanner.nextLine();
 
-        System.out.print("Nhập tên mới (DEV, TEST, PM...): ");
-        String name = scanner.nextLine();
-
-        try {
-            PositionName positionName = PositionName.valueOf(name.toUpperCase());
-
-            Position pos = new Position();
-            pos.setId(id);
-            pos.setName(positionName);
-
-            boolean check = positionController.update(pos);
-
-            if (check) {
-                System.out.println("Update thành công!");
-            } else {
-                System.out.println("Update thất bại!");
+            if(id <= 0){
+                System.out.println("ID phải > 0, nhập lại:");
+                continue;
             }
+            if(!positionController.checkExistID(id)){
+                System.out.println("ID không tồn tại, nhập lại:");
+                continue;
+            }
+            break;
+        }
+        PositionName newName;
 
-        } catch (Exception e) {
-            System.out.println("Tên chức vụ không hợp lệ!");
+        while (true) {
+
+            System.out.println("Chọn Position mới:");
+            System.out.println("1. DEV");
+            System.out.println("2. TEST");
+            System.out.println("3. SCRUM_MASTER");
+            System.out.println("4. PM");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            newName = this.convertToPositionName(choice);
+
+            // check null
+            if (Objects.isNull(newName)) {
+
+                System.out.println("Lựa chọn không hợp lệ!");
+                continue;
+            }
+            break;
+        }
+
+        boolean check =
+                positionController.update(id, newName);
+
+        if (check) {
+            System.out.println("Update thành công");
+        } else {
+            System.out.println("Update thất bại");
+        }
+    }
+    public PositionName convertToPositionName(int choice) {
+
+        switch (choice) {
+
+            case 1:
+                return PositionName.DEV;
+
+            case 2:
+                return PositionName.TEST;
+
+            case 3:
+                return PositionName.SCRUM_MASTER;
+
+            case 4:
+                return PositionName.PM;
+
+            default:
+                return null;
         }
     }
 }

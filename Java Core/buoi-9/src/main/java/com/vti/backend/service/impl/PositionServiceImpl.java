@@ -4,6 +4,7 @@ import com.vti.backend.repository.IPositionRepository;
 import com.vti.backend.repository.impl.PositionRepositoryImpl;
 import com.vti.backend.service.IPositionService;
 import com.vti.entity.Position;
+import com.vti.enums.PositionName;
 
 import java.util.List;
 
@@ -17,20 +18,37 @@ public class PositionServiceImpl implements IPositionService {
     }
 
     @Override
-    public Boolean create(Position pos) {
-        boolean check = positionRepository.create(pos);
-        return check;
-    }
-
-    @Override
     public Boolean delete(int id) {
         boolean check = positionRepository.delete(id);
         return check;
     }
 
     @Override
-    public Boolean update(Position pos) {
-        boolean check = positionRepository.update(pos);
+    public boolean checkExistNameAndIdNot(PositionName positionName, Integer id) {
+        boolean check =  positionRepository.checkExistNameAndIdNot(positionName, id);
         return check;
+    }
+
+    @Override
+    public boolean createPosition(PositionName positionName) {
+        boolean check = positionRepository.createPosition(positionName);
+        return check;
+    }
+
+    @Override
+    public boolean checkExistID(int id) {
+        boolean check = positionRepository.checkExistID(id);
+        return check;
+    }
+
+    @Override
+    public boolean update(Integer id, PositionName newName) {
+        boolean check = positionRepository.update(id, newName);
+        return check;
+    }
+    @Override
+    public boolean isPositionUsed(int id) {
+
+        return positionRepository.isPositionUsed(id);
     }
 }

@@ -42,25 +42,6 @@ public class PositionRepositoryImpl implements IPositionRepository {
         return positions;
     }
 
-    @Override
-    public Boolean create(Position pos) {
-        try {
-            // b1: kết nối đến DB
-            Connection connection = JDBCUtils.getConnection();
-            // b2: update department
-            String sql = "INSERT INTO position(position_name) VALUES (?);";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, pos.getName().name());
-            // thực thi câu sql
-            int c = statement.executeUpdate();// trả ra số row thay đổi trong DB
-            JDBCUtils.closeConnection(connection, statement, null);
-            // c= 0
-            return c > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     @Override
     public Boolean delete(int id) {
@@ -82,15 +63,58 @@ public class PositionRepositoryImpl implements IPositionRepository {
     }
 
     @Override
-    public Boolean update(Position pos) {
+    public boolean checkExistID(int id) {
+
+        try {
+
+            Connection connection =
+                    JDBCUtils.getConnection();
+
+            String sql =
+                    "SELECT count(1) " +
+                            "FROM position " +
+                            "WHERE position_id = ?";
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql);
+
+            statement.setInt(1, id);
+
+            ResultSet rs = statement.executeQuery();
+
+            boolean isExists = false;
+
+            if (rs.next()) {
+
+                isExists = rs.getInt(1) > 0;
+            }
+
+            JDBCUtils.closeConnection(
+                    connection,
+                    statement,
+                    rs
+            );
+
+            return isExists;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean update(Integer id, PositionName newName) {
         try {
             Connection connection = JDBCUtils.getConnection();
 
             String sql = "UPDATE position SET position_name = ? WHERE position_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setString(1, pos.getName().name());
-            statement.setInt(2, pos.getId());
+            statement.setString(1, newName.name());
+            statement.setInt(2, id);
 
             int c = statement.executeUpdate();
 
@@ -104,4 +128,133 @@ public class PositionRepositoryImpl implements IPositionRepository {
         return false;
     }
 
+    @Override
+    public boolean checkExistNameAndIdNot(PositionName positionName, Integer id) {
+        try {
+
+            Connection connection =
+                    JDBCUtils.getConnection();
+
+            String sql;
+            // create
+            if (id == null) {
+
+                sql =
+                        "SELECT count(1) " +
+                                "FROM position " +
+                                "WHERE position_name = ?";
+
+            }
+            // update
+            else {
+                sql =
+                        "SELECT count(1) " +
+                                "FROM position " +
+                                "WHERE position_name = ? " +
+                                "AND position_id <> ?";
+            }
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql);
+
+            statement.setString(
+                    1,
+                    positionName.name()
+            );
+            // chỉ set id khi update
+            if (id != null) {
+
+                statement.setInt(2, id);
+            }
+
+            ResultSet rs =
+                    statement.executeQuery();
+
+            boolean isExists = false;
+
+            if (rs.next()) {
+
+                isExists = rs.getInt(1) > 0;
+            }
+
+            JDBCUtils.closeConnection(
+                    connection,
+                    statement,
+                    rs
+            );
+
+            return isExists;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean createPosition(PositionName positionName) {
+        try {
+            // b1: kết nối đến DB
+            Connection connection = JDBCUtils.getConnection();
+            // b2: update department
+            String sql = "INSERT INTO position(position_name) VALUES (?);";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, positionName.name());
+            // thực thi câu sql
+            int c = statement.executeUpdate();// trả ra số row thay đổi trong DB
+            JDBCUtils.closeConnection(connection, statement, null);
+            // c= 0
+            return c > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPositionUsed(int id) {
+
+        try {
+
+            Connection connection =
+                    JDBCUtils.getConnection();
+
+            String sql =
+                    "SELECT count(1) " +
+                            "FROM account " +
+                            "WHERE position_id = ?";
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql);
+
+            statement.setInt(1, id);
+
+            ResultSet rs =
+                    statement.executeQuery();
+
+            boolean isUsed = false;
+
+            if (rs.next()) {
+
+                isUsed = rs.getInt(1) > 0;
+            }
+
+            JDBCUtils.closeConnection(
+                    connection,
+                    statement,
+                    rs
+            );
+
+            return isUsed;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
+

@@ -128,4 +128,178 @@ public class AccountRepositoryIplm implements IAccountRepository {
         }
         return false;
     }
+
+    @Override
+    public boolean checkExistUsernameAndIdNot(String username, Integer id) {
+        try {
+            Connection connection = JDBCUtils.getConnection();
+            String sql;
+            if (id == null) {
+                sql = "SELECT COUNT(1) " +
+                        "FROM account " +
+                        "WHERE username = ?";
+            }
+            // UPDATE
+            else {
+
+                sql = "SELECT COUNT(1) " +
+                        "FROM account " +
+                        "WHERE username = ? " +
+                        "AND account_id <> ?";
+            }
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql);
+
+            statement.setString(1, username);
+
+            if (id != null) {
+                statement.setInt(2, id);
+            }
+
+            ResultSet rs = statement.executeQuery();
+
+            boolean isExist = false;
+
+            if (rs.next()) {
+                isExist = rs.getInt(1) > 0;
+            }
+
+            JDBCUtils.closeConnection(connection, statement, rs);
+
+            return isExist;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean checkExistEmailAndIdNot(String email, Integer id) {
+        try {
+            Connection connection = JDBCUtils.getConnection();
+            String sql;
+            if (id == null) {
+                sql =
+                        "SELECT COUNT(1) " +
+                                "FROM account " +
+                                "WHERE email = ?";
+            } else {
+                sql =
+                        "SELECT COUNT(1) " +
+                                "FROM account " +
+                                "WHERE email = ? " +
+                                "AND account_id <> ?";
+            }
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, email);
+            if (id != null) {
+                statement.setInt(2, id);
+            }
+            ResultSet rs = statement.executeQuery();
+
+            boolean isExist = false;
+            if (rs.next()) {
+                isExist = rs.getInt(1) > 0;
+            }
+            JDBCUtils.closeConnection(connection, statement, rs);
+            return isExist;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkExistPositionID(int posId) {
+        try {
+            Connection connection = JDBCUtils.getConnection();
+            String sql =
+                    "SELECT COUNT(1) " +
+                            "FROM position " +
+                            "WHERE position_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, posId);
+            ResultSet rs = statement.executeQuery();
+            boolean isExist = false;
+            if (rs.next()) {
+                isExist = rs.getInt(1) > 0;
+            }
+            JDBCUtils.closeConnection(connection, statement, rs);
+            return isExist;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkExistID(int id) {
+        try {
+            Connection connection = JDBCUtils.getConnection();
+            String sql =
+                    "SELECT COUNT(1) " +
+                            "FROM account " +
+                            "WHERE account_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            boolean isExist = false;
+            if (rs.next()) {
+                isExist = rs.getInt(1) > 0;
+            }
+            JDBCUtils.closeConnection(connection, statement, rs);
+            return isExist;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkExistDepartmentID(int depId) {
+        boolean check = false;
+        try {
+            // b1: kết nối đến DB
+            Connection connection = JDBCUtils.getConnection();
+            // b2: lấy dữ liệu từ bảng department
+            String sql = "select * from department where department_id = ? ";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, depId);
+
+            ResultSet rs = preparedStatement.executeQuery();// thực thi câu lệnh sql và gán bảng trả ra vào ResultSet rs
+            if (rs.next()) {// lặp qua qua từng dòng của rs
+                check = true;
+            }
+            // đóng các kết nối
+            JDBCUtils.closeConnection(connection, preparedStatement, rs);
+        } catch (Exception e) {// show các lỗi lien quan đén logic xử lý
+            e.printStackTrace();// show ra exception
+        }
+        return check;
+    }
+
+    @Override
+    public boolean updateUsername(int id, String newUsername) {
+        try {
+            Connection connection = JDBCUtils.getConnection();
+            String sql =
+                    "UPDATE account " +
+                            "SET username = ? " +
+                            "WHERE account_id = ?";
+            PreparedStatement statement =
+                    connection.prepareStatement(sql);
+            statement.setString(1, newUsername);
+            statement.setInt(2, id);
+            int rows = statement.executeUpdate();
+            JDBCUtils.closeConnection(connection, statement, null);
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

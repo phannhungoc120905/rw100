@@ -58,99 +58,328 @@ public class AccountFunction {
         System.out.println("+-----+--------------------+");
     }
     public void insertAccount()  {
-        System.out.print("Username: ");
-        String username = scanner.nextLine();
+        String username;
 
-        System.out.print("Fullname: ");
-        String fullname = scanner.nextLine();
+            while (true) {
 
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
+                System.out.print("Username: ");
 
-        System.out.print("Department ID: ");
-        int depId = Integer.parseInt(scanner.nextLine());
+                username = scanner.nextLine();
 
-        System.out.print("Position ID: ");
-        int posId = Integer.parseInt(scanner.nextLine());
+                // null hoặc rỗng
+                if (username == null
+                        || username.trim().isEmpty()) {
 
-        Account acc = new Account();
-        acc.setUsername(username);
-        acc.setFullName(fullname);
-        acc.setEmail(email);
+                    System.out.println(
+                            "Username không được để trống!"
+                    );
 
-        Department dep = new Department();
-        dep.setId(depId);
-        acc.setDepartment(dep);
+                    continue;
+                }
 
-        Position pos = new Position();
-        pos.setId(posId);
-        acc.setPosition(pos);
+                // unique
+                if (accountController.checkExistUsernameAndIdNot(username, null)) {
+                    System.out.println("Username đã tồn tại!");
+                    continue;
+                }
 
-        acc.setCreateDate(java.time.LocalDate.now());
+                break;
+            }
 
-        boolean check = accountController.create(acc);
+            String fullname;
 
-        if (check) {
-            System.out.println("Thêm thành công!");
-        } else {
-            System.out.println("Thêm thất bại!");
+            while (true) {
+
+                System.out.print("Fullname: ");
+
+                fullname = scanner.nextLine();
+
+                if (fullname == null
+                        || fullname.trim().isEmpty()) {
+
+                    System.out.println(
+                            "Fullname không được để trống!"
+                    );
+
+                    continue;
+                }
+
+                break;
+            }
+
+            String email;
+
+            while (true) {
+
+                System.out.print("Email: ");
+
+                email = scanner.nextLine();
+
+                if (email == null
+                        || email.trim().isEmpty()) {
+
+                    System.out.println(
+                            "Email không được để trống!"
+                    );
+
+                    continue;
+                }
+
+                // check @
+                if (!email.contains("@")) {
+
+                    System.out.println(
+                            "Email phải chứa @"
+                    );
+
+                    continue;
+                }
+
+                // unique
+                if (accountController.checkExistEmailAndIdNot(
+                                email,
+                                null)) {
+
+                    System.out.println(
+                            "Email đã tồn tại!"
+                    );
+
+                    continue;
+                }
+
+                break;
+            }
+
+            int depId;
+
+            while (true) {
+
+                System.out.print("Department ID: ");
+
+                depId = Integer.parseInt(
+                        scanner.nextLine());
+
+                if (depId <= 0) {
+
+                    System.out.println(
+                            "Department ID phải > 0"
+                    );
+
+                    continue;
+                }
+
+                if (!accountController.checkExistDepartmentID(depId)) {
+
+                    System.out.println(
+                            "Department không tồn tại!"
+                    );
+
+                    continue;
+                }
+
+                break;
+            }
+
+            int posId;
+
+            while (true) {
+
+                System.out.print("Position ID: ");
+
+                posId = Integer.parseInt(
+                        scanner.nextLine());
+
+                if (posId <= 0) {
+
+                    System.out.println(
+                            "Position ID phải > 0"
+                    );
+
+                    continue;
+                }
+
+                if (!accountController.checkExistPositionID(posId)) {
+
+                    System.out.println(
+                            "Position không tồn tại!"
+                    );
+
+                    continue;
+                }
+
+                break;
+            }
+
+            Account acc = new Account();
+
+            acc.setUsername(username);
+            acc.setFullName(fullname);
+            acc.setEmail(email);
+
+            Department dep = new Department();
+            dep.setId(depId);
+
+            acc.setDepartment(dep);
+
+            Position pos = new Position();
+            pos.setId(posId);
+
+            acc.setPosition(pos);
+
+            acc.setCreateDate(
+                    java.time.LocalDate.now());
+
+            boolean check =
+                    accountController.create(acc);
+
+            if (check) {
+
+                System.out.println(
+                        "Thêm thành công!"
+                );
+
+            } else {
+
+                System.out.println(
+                        "Thêm thất bại!"
+                );
+            }
         }
-    }
 
-    public void updateAccount()  {
-        System.out.print("Nhập ID cần sửa: ");
-        int id = Integer.parseInt(scanner.nextLine());
+    public void updateAccount() {
 
-        System.out.print("Username mới: ");
-        String username = scanner.nextLine();
+        int id;
 
-        System.out.print("Fullname mới: ");
-        String fullname = scanner.nextLine();
+        while (true) {
 
-        System.out.print("Email mới: ");
-        String email = scanner.nextLine();
+            System.out.print(
+                    "Nhập ID cần sửa: ");
 
-        System.out.print("Department ID mới: ");
-        int depId = Integer.parseInt(scanner.nextLine());
+            id = Integer.parseInt(
+                    scanner.nextLine());
 
-        System.out.print("Position ID mới: ");
-        int posId = Integer.parseInt(scanner.nextLine());
+            // > 0
+            if (id <= 0) {
 
-        Account acc = new Account();
-        acc.setId(id);
-        acc.setUsername(username);
-        acc.setFullName(fullname);
-        acc.setEmail(email);
+                System.out.println(
+                        "ID phải > 0"
+                );
 
-        Department dep = new Department();
-        dep.setId(depId);
-        acc.setDepartment(dep);
+                continue;
+            }
 
-        Position pos = new Position();
-        pos.setId(posId);
-        acc.setPosition(pos);
+            // tồn tại
+            if (!accountController.checkExistID(id)) {
 
-        acc.setCreateDate(java.time.LocalDate.now());
+                System.out.println(
+                        "ID không tồn tại!"
+                );
 
-        boolean check = accountController.update(acc);
+                continue;
+            }
+
+            break;
+        }
+
+        String newUsername;
+
+        while (true) {
+
+            System.out.print(
+                    "Username mới: ");
+
+            newUsername =
+                    scanner.nextLine();
+
+            if (newUsername == null
+                    || newUsername.trim().isEmpty()) {
+
+                System.out.println(
+                        "Username không được để trống!"
+                );
+
+                continue;
+            }
+
+            // unique
+            if (accountController.checkExistUsernameAndIdNot(
+                            newUsername,
+                            id)) {
+
+                System.out.println(
+                        "Username đã tồn tại!"
+                );
+
+                continue;
+            }
+
+            break;
+        }
+
+        boolean check =
+                accountController.updateUsername(id, newUsername);
 
         if (check) {
-            System.out.println("Update thành công!");
+
+            System.out.println(
+                    "Update thành công!"
+            );
+
         } else {
-            System.out.println("Update thất bại!");
+
+            System.out.println(
+                    "Update thất bại!"
+            );
         }
     }
 
     public static void deleteAccount() {
+
         System.out.print("Nhập ID cần xóa: ");
-        int id = Integer.parseInt(scanner.nextLine());
+
+        int id;
+
+        while (true) {
+
+            id = Integer.parseInt(
+                    scanner.nextLine());
+
+            // > 0
+            if (id <= 0) {
+
+                System.out.println(
+                        "ID phải > 0"
+                );
+
+                continue;
+            }
+
+            // tồn tại
+            if (!accountController.checkExistID(id)) {
+
+                System.out.println(
+                        "ID không tồn tại!"
+                );
+
+                continue;
+            }
+
+            break;
+        }
 
         boolean check = accountController.delete(id);
 
         if (check) {
-            System.out.println("Xóa thành công!");
+
+            System.out.println(
+                    "Xóa thành công!"
+            );
+
         } else {
-            System.out.println("Xóa thất bại!");
+
+            System.out.println(
+                    "Xóa thất bại!"
+            );
         }
     }
 }

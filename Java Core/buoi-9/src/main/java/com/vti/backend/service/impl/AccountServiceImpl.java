@@ -33,4 +33,40 @@ public class AccountServiceImpl implements IAccountService {
         return check;
     }
 
+    @Override
+    public boolean checkExistUsernameAndIdNot(String username, Integer id) {
+        boolean check = accountRepository.checkExistUsernameAndIdNot(username, id);
+        return check;
+    }
+
+    @Override
+    public boolean checkExistEmailAndIdNot(String email, Integer id) {
+        boolean check = accountRepository.checkExistEmailAndIdNot(email, id);
+        return check;
+    }
+
+    @Override
+    public boolean checkExistPositionID(int posId) {
+        boolean check = accountRepository.checkExistPositionID(posId);
+        return check;
+    }
+
+    @Override
+    public boolean checkExistID(int id) {
+        boolean check = accountRepository.checkExistID(id);
+        return check;
+    }
+
+    @Override
+    public boolean checkExistDepartmentID(int depId) {
+        boolean check = accountRepository.checkExistDepartmentID(depId);
+        return check;
+    }
+
+    @Override
+    public boolean updateUsername(int id, String newUsername) {
+        boolean check = accountRepository.updateUsername(id, newUsername);
+        return check;
+    }
+
 }

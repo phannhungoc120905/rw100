@@ -14,10 +14,10 @@ public class App
 //        DepartmentFunction function = new DepartmentFunction();
 //        function.run();
 
-//        AccountFunction function1 = new AccountFunction();
-//        function1.run();
+        AccountFunction function1 = new AccountFunction();
+        function1.run();
 
-        PositionFunction function2 = new PositionFunction();
-        function2.run();
+//        PositionFunction function2 = new PositionFunction();
+//        function2.run();
     }
 }
